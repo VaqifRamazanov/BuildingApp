@@ -6,12 +6,10 @@ import com.matrix.buildingapp.model.entity.Card;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 
-import java.util.List;
-
 @Mapper(componentModel = "spring")
 public interface CardMapper {
-    Card toEntity(CardRequestDto cardRequestDto);
-    CardResponseDto toResponse(Card card);
+    Card mapToEntity(CardRequestDto cardRequestDto);
+    CardResponseDto mapToResponse(Card card);
     void toUpdate(CardRequestDto cardRequestDto, @MappingTarget Card card);
 
 }

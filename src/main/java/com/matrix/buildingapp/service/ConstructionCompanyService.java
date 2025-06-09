@@ -13,7 +13,7 @@ import java.util.List;
 public interface ConstructionCompanyService {
     ConstructionCompanyResponseDto add(ConstructionCompanyRequestDto constructionCompanyRequestDto);
     ConstructionCompanyResponseDto findById(Integer id);
-    ConstructionCompanyResponseDto update(ConstructionCompanyRequestDto constructionCompanyRequestDto);
+    ConstructionCompanyResponseDto update(Integer id,ConstructionCompanyRequestDto constructionCompanyRequestDto);
     void delete(Integer id);
     List<ConstructionCompanyResponseDto> findAll();
     List<AnnouncementResponseDto> getAnnouncementByConstructionCompany(Integer id);

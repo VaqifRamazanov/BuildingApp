@@ -8,7 +8,7 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring")
 public interface FavoriteMapper {
-    Favorite toEntity(FavoriteRequestDto requestDto);
-    FavoriteResponseDto toResponse(Favorite favorite);
+    Favorite mapToEntity(FavoriteRequestDto requestDto);
+    FavoriteResponseDto mapToResponse(Favorite favorite);
     void toUpdate(FavoriteRequestDto announcementDto, @MappingTarget Favorite favorite);
 }

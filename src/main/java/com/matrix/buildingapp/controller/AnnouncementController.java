@@ -17,19 +17,21 @@ import java.util.List;
 public class AnnouncementController {
     private final AnnouncementService announcementService;
     @PostMapping("/add")
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<AnnouncementResponseDto> add(@RequestBody AnnouncementRequestDto announcementRequestDto){
-        return ResponseEntity.ok(announcementService.add(announcementRequestDto));
+    public ResponseEntity<AnnouncementResponseDto> add(@ModelAttribute AnnouncementRequestDto announcementRequestDto){
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(announcementService.add(announcementRequestDto));
     }
     @GetMapping({"/get/{id}"})
     public ResponseEntity<AnnouncementResponseDto> getById(@PathVariable Integer id){
 
-        return ResponseEntity.ok(announcementService.getById(id));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(announcementService.getById(id));
     }
-    @PutMapping("/update")
-    public ResponseEntity<AnnouncementResponseDto> update(@RequestBody AnnouncementRequestDto announcementRequestDto){
+    @PutMapping("/update/{id}")
+    public ResponseEntity<AnnouncementResponseDto> update(@PathVariable Integer id ,@ModelAttribute AnnouncementRequestDto announcementRequestDto){
 
-        return ResponseEntity.ok(announcementService.update(announcementRequestDto));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(announcementService.update(id,announcementRequestDto));
     }
 
     @DeleteMapping({"/delete/{id}"})
@@ -41,7 +43,8 @@ public class AnnouncementController {
     @GetMapping("/getAll")
     public  ResponseEntity<List<AnnouncementResponseDto>> getAll()
     {
-      return  ResponseEntity.ok(announcementService.getAll());
+      return  ResponseEntity.status(HttpStatus.OK)
+              .body(announcementService.getAll());
 
     }
 }

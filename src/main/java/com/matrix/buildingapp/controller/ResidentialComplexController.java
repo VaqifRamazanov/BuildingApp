@@ -28,10 +28,10 @@ public class ResidentialComplexController {
         return ResponseEntity.ok(residentialComplexService.findById(id));
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<ResidentialComplexResponseDto> Update(@RequestBody ResidentialComplexRequestDto legalComplexRequestDto) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ResidentialComplexResponseDto> Update(@PathVariable Integer id,@RequestBody ResidentialComplexRequestDto legalComplexRequestDto) {
 
-        return ResponseEntity.ok(residentialComplexService.update(legalComplexRequestDto));
+        return ResponseEntity.ok(residentialComplexService.update(id,legalComplexRequestDto));
     }
 
     @DeleteMapping({"/delete/{id}"})

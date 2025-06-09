@@ -5,13 +5,13 @@ import com.matrix.buildingapp.model.dto.requestDto.AnnouncementRequestDto;
 import com.matrix.buildingapp.model.dto.responseDto.AnnouncementResponseDto;
 import com.matrix.buildingapp.model.entity.Announcement;
 import org.mapstruct.Mapper;
-import org.springframework.data.domain.Page;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface AnnouncementMapper {
-    Announcement toRequestDtoMapEntity(AnnouncementRequestDto announcementRequestDto);
-    AnnouncementResponseDto toEntityMapResponseDto(Announcement announcement);
-    List<AnnouncementResponseDto> map(List<Announcement> announcement);
+    Announcement mapToEntity(AnnouncementRequestDto announcementRequestDto);
+    AnnouncementResponseDto mapToResponse(Announcement announcement);
+    Announcement map(AnnouncementRequestDto announcementRequestDto, @MappingTarget Announcement announcement);
 }

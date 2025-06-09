@@ -11,6 +11,7 @@ import com.matrix.buildingapp.model.entity.Favorite;
 import com.matrix.buildingapp.model.entity.User;
 import com.matrix.buildingapp.repository.UserRepository;
 import com.matrix.buildingapp.service.AuthService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.mail.SimpleMailMessage;
@@ -41,6 +42,7 @@ public class AuthServiceImpl implements AuthService {
     private final String myEmail = "vramazanov004@gmail.com";
 
     @Override
+    @Transactional
     public void register(UserRequestDto userRequestDto) {
         log.info("ActionLog.register.started: username {}", userRequestDto.getUsername());
 
@@ -60,7 +62,6 @@ public class AuthServiceImpl implements AuthService {
         Favorite favorite=new Favorite();
         favorite.setUser(user);
         user.setFavorite(favorite);
-
         userRepository.save(user);
 
         log.info("ActionLog.register.completed: username {}", userRequestDto.getUsername());

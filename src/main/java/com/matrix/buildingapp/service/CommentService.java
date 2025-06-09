@@ -12,7 +12,7 @@ import java.util.List;
 public interface CommentService {
     CommentResponseDto add(CommentRequestDto commentRequestDto);
     CommentResponseDto getById(Integer id);
-    CommentResponseDto update(CommentRequestDto commentRequestDto);
+    CommentResponseDto update(Integer id, CommentRequestDto commentRequestDto);
     void delete(Integer id);
     List<CommentResponseDto> getAll();
 

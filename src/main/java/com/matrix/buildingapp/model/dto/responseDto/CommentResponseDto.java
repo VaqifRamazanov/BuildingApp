@@ -10,6 +10,7 @@ public class CommentResponseDto {
     private Integer id;
     private String content;
     private LocalDateTime createdAt;
-    private ConstructionCompany constructionCompanyId;
+    private Integer constructionCompanyId;
+
 
 }

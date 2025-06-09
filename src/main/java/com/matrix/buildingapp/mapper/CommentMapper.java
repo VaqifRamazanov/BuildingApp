@@ -5,15 +5,15 @@ import com.matrix.buildingapp.model.dto.requestDto.CommentRequestDto;
 import com.matrix.buildingapp.model.dto.responseDto.CommentResponseDto;
 import com.matrix.buildingapp.model.entity.Comment;
 import org.mapstruct.Mapper;
-import org.springframework.data.domain.Page;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
-    Comment toRequestDtoMapEntity(CommentRequestDto commentRequestDto);
+    Comment mapToEntity(CommentRequestDto commentRequestDto);
 
-    CommentResponseDto toEntityMapResponseDto(Comment comment);
+    CommentResponseDto mapToResponse(Comment comment);
 
-    List<CommentResponseDto> map(List<Comment> comment);
+    Comment map(CommentRequestDto commentRequestDto, @MappingTarget Comment comment);
 }

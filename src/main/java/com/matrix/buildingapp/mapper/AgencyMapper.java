@@ -3,15 +3,15 @@ import com.matrix.buildingapp.model.dto.requestDto.AgencyRequestDto;
 import com.matrix.buildingapp.model.dto.responseDto.AgencyResponseDto;
 import com.matrix.buildingapp.model.entity.Agency;
 import org.mapstruct.Mapper;
-import org.springframework.data.domain.Page;
+import org.mapstruct.MappingTarget;
 
 import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface AgencyMapper {
-    Agency toRequestDtoMapEntity(AgencyRequestDto agencyRequestDto);
+    Agency mapToEntity(AgencyRequestDto agencyRequestDto);
 
-    AgencyResponseDto toEntityMapResponseDto(Agency agency);
+    AgencyResponseDto mapToResponse(Agency agency);
 
-    List<AgencyResponseDto> map(List<Agency> agency);
+    Agency map(AgencyRequestDto agencyRequestDto, @MappingTarget Agency agency);
 }

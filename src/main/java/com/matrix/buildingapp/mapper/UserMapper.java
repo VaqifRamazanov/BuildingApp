@@ -13,9 +13,9 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
         ,nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 
 public interface UserMapper {
-    User toEntity(UserRequestDto userRequestDto);
+    User mapToEntity(UserRequestDto userRequestDto);
 
-    UserResponseDto toResponse(User user);
+    UserResponseDto mapToResponse(User user);
 
     void toUpdate(UserDto userDto, @MappingTarget User user);
 }

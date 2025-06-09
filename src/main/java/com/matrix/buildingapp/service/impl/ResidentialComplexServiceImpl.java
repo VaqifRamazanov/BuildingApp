@@ -7,14 +7,12 @@ import com.matrix.buildingapp.mapper.ResidentialComplexMapper;
 import com.matrix.buildingapp.model.dto.requestDto.ResidentialComplexRequestDto;
 import com.matrix.buildingapp.model.dto.responseDto.AnnouncementResponseDto;
 import com.matrix.buildingapp.model.dto.responseDto.ResidentialComplexResponseDto;
-import com.matrix.buildingapp.model.entity.ConstructionCompany;
 import com.matrix.buildingapp.model.entity.ResidentialComplex;
 import com.matrix.buildingapp.repository.AnnouncementRepository;
 import com.matrix.buildingapp.repository.ResidentialComplexRepository;
 import com.matrix.buildingapp.service.ResidentialComplexService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,39 +29,40 @@ public class ResidentialComplexServiceImpl implements ResidentialComplexService 
 
     @Override
     public ResidentialComplexResponseDto add(ResidentialComplexRequestDto residentialComplexRequestDto) {
-        ResidentialComplex residentialComplex=residentialComplexMapper.toRequestDtoMapEntity(residentialComplexRequestDto);
+        ResidentialComplex residentialComplex=residentialComplexMapper.mapToEntity(residentialComplexRequestDto);
         residentialComplexRepository.save(residentialComplex);
-        ResidentialComplexResponseDto residentialComplexResponseDto =residentialComplexMapper.toEntityMapResponseDto(residentialComplex);
-        return residentialComplexResponseDto;
+        return residentialComplexMapper.mapToResponse(residentialComplex);
     }
 
     @Override
     public ResidentialComplexResponseDto findById(Integer id) {
 
         ResidentialComplex residentialComplex= residentialComplexRepository.findById(id).orElseThrow(()->new NotFoundException("Residential Complex not found"));
-        ResidentialComplexResponseDto residentialComplexResponseDto =residentialComplexMapper.toEntityMapResponseDto(residentialComplex);
-        return residentialComplexResponseDto;
+        return residentialComplexMapper.mapToResponse(residentialComplex);
+
     }
 
     @Override
-    public ResidentialComplexResponseDto update(ResidentialComplexRequestDto residentialComplexRequestDto) {
-        ResidentialComplex residentialComplex=residentialComplexMapper.toRequestDtoMapEntity(residentialComplexRequestDto);
-        residentialComplexRepository.save(residentialComplex);
-        ResidentialComplexResponseDto residentialComplexResponseDto =residentialComplexMapper.toEntityMapResponseDto(residentialComplex);
-        return residentialComplexResponseDto;
+    public ResidentialComplexResponseDto update(Integer id  ,ResidentialComplexRequestDto residentialComplexRequestDto) {
+        ResidentialComplex residentialComplex=residentialComplexRepository.findById(id).orElseThrow(()->new NotFoundException("residentialComplex not found"));
+        ResidentialComplex residentialComplex1 =residentialComplexMapper.map(residentialComplexRequestDto,residentialComplex);
+        residentialComplexRepository.save(residentialComplex1);
+        return residentialComplexMapper.mapToResponse(residentialComplex1);
+
     }
 
     @Override
     public void delete(Integer id) {
-
+        residentialComplexRepository.findById(id).orElseThrow(()-> new NotFoundException("residentialComplex not found"));
         residentialComplexRepository.deleteById(id);
     }
 
     @Override
     public List<ResidentialComplexResponseDto> findAll() {
         List<ResidentialComplex> residentialComplex= residentialComplexRepository.findAll();
-        List<ResidentialComplexResponseDto> residentialComplexResponseDto =residentialComplexMapper.map(residentialComplex);
-        return residentialComplexResponseDto;
+        return residentialComplex.stream()
+                .map(residentialComplexMapper :: mapToResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -71,11 +70,10 @@ public class ResidentialComplexServiceImpl implements ResidentialComplexService 
 log.info("Fetching announcement for Residential complex ID: {} ",id);
 ResidentialComplex residentialComplex=residentialComplexRepository.findById(id)
         .orElseThrow(()->new NotFoundException("Residential complex not found"));
-List<AnnouncementResponseDto> announcements=announcementRepository.findByResidentialComplex(residentialComplex)
-        .stream().map(announcement -> announcementMapper.toEntityMapResponseDto(announcement))
+log.info("Fetching {} announcement for residential complex ID: {} ",residentialComplex.getAnnouncement().size(),id);
+return residentialComplex.getAnnouncement().stream()
+        .map(announcementMapper ::mapToResponse)
         .collect(Collectors.toList());
-log.info("Fetching {} announcement for residential complex ID: {} ",announcements.size(),id);
-return announcements;
     }
 
 }

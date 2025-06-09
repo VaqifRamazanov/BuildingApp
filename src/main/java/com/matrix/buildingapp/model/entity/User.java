@@ -35,7 +35,7 @@ public class User implements UserDetails {
 @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
 private List<Announcement> announcement;
 
-@OneToOne(mappedBy = "user")
+@OneToOne(mappedBy = "user",cascade = CascadeType.ALL)
 private Favorite favorite;
 
 @ManyToOne
@@ -43,7 +43,7 @@ private Favorite favorite;
 private Agency agency;
 
 
-    @OneToOne(mappedBy = "user")  // Remove CascadeType.PERSIST, or ideally, set no cascade at all
+    @OneToOne(mappedBy = "user")
     private Card card;
 
     public User(String username) {

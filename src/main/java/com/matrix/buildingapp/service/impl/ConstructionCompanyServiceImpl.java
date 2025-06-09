@@ -9,13 +9,10 @@ import com.matrix.buildingapp.model.dto.responseDto.AnnouncementResponseDto;
 import com.matrix.buildingapp.model.dto.responseDto.CommentResponseDto;
 import com.matrix.buildingapp.model.dto.responseDto.ConstructionCompanyResponseDto;
 import com.matrix.buildingapp.model.entity.ConstructionCompany;
-import com.matrix.buildingapp.repository.AnnouncementRepository;
-import com.matrix.buildingapp.repository.CommentRepository;
 import com.matrix.buildingapp.repository.ConstructionCompanyRepository;
 import com.matrix.buildingapp.service.ConstructionCompanyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,42 +24,37 @@ import java.util.stream.Collectors;
 public class ConstructionCompanyServiceImpl implements ConstructionCompanyService {
     private final ConstructionCompanyMapper constructionCompanyMapper;
     private final ConstructionCompanyRepository constructionCompanyRepository;
-    private final AnnouncementRepository announcementRepository;
     private final AnnouncementMapper announcementMapper;
-    private final CommentRepository commentRepository;
     private final CommentMapper commentMapper;
 
     @Override
     public ConstructionCompanyResponseDto add(ConstructionCompanyRequestDto constructionCompanyRequestDto) {
         ConstructionCompany constructionCompany = constructionCompanyMapper.
-                toRequestDtoMapEntity(constructionCompanyRequestDto);
+                mapToEntity(constructionCompanyRequestDto);
         constructionCompanyRepository.save(constructionCompany);
-        ConstructionCompanyResponseDto constructionCompanyResponseDto = constructionCompanyMapper
-                .toEntityMapResponseDto(constructionCompany);
-        return constructionCompanyResponseDto;
+        return constructionCompanyMapper.mapToResponse(constructionCompany);
     }
 
     @Override
     public ConstructionCompanyResponseDto findById(Integer id) {
         ConstructionCompany constructionCompany = constructionCompanyRepository.
-                findById(id).orElseThrow(NullPointerException::new);
-        ConstructionCompanyResponseDto constructionCompanyResponseDto = constructionCompanyMapper
-                .toEntityMapResponseDto(constructionCompany);
-        return constructionCompanyResponseDto;
+                findById(id).orElseThrow(()-> new NotFoundException("construction company not found"));
+        return constructionCompanyMapper.mapToResponse(constructionCompany);
     }
 
     @Override
-    public ConstructionCompanyResponseDto update(ConstructionCompanyRequestDto constructionCompanyRequestDto) {
-        ConstructionCompany constructionCompany = constructionCompanyMapper.
-                toRequestDtoMapEntity(constructionCompanyRequestDto);
-        constructionCompanyRepository.save(constructionCompany);
-        ConstructionCompanyResponseDto constructionCompanyResponseDto = constructionCompanyMapper
-                .toEntityMapResponseDto(constructionCompany);
-        return constructionCompanyResponseDto;
+    public ConstructionCompanyResponseDto update(Integer id,ConstructionCompanyRequestDto constructionCompanyRequestDto) {
+        ConstructionCompany constructionCompany=constructionCompanyRepository.findById(id)
+                .orElseThrow(()-> new NotFoundException("construction company not found"));
+        ConstructionCompany constructionCompany1 = constructionCompanyMapper.
+                map(constructionCompanyRequestDto,constructionCompany);
+        constructionCompanyRepository.save(constructionCompany1);
+       return constructionCompanyMapper.mapToResponse(constructionCompany1);
     }
 
     @Override
     public void delete(Integer id) {
+        constructionCompanyRepository.findById(id).orElseThrow(()-> new NotFoundException("construction company not found"));
         constructionCompanyRepository.deleteById(id);
 
     }
@@ -70,9 +62,9 @@ public class ConstructionCompanyServiceImpl implements ConstructionCompanyServic
     @Override
     public List<ConstructionCompanyResponseDto> findAll() {
         List<ConstructionCompany> constructionCompanies = constructionCompanyRepository.findAll();
-        List<ConstructionCompanyResponseDto> constructionCompanyResponseDtos =
-                constructionCompanyMapper.map(constructionCompanies);
-        return constructionCompanyResponseDtos;
+        return constructionCompanies.stream()
+                .map(constructionCompanyMapper ::mapToResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -80,11 +72,10 @@ public class ConstructionCompanyServiceImpl implements ConstructionCompanyServic
         log.info("Fetching announcement for Construction company ID: {} ",id);
         ConstructionCompany constructionCompany=constructionCompanyRepository.findById(id)
                 .orElseThrow(()-> new NotFoundException("Construction company not found"));
-        List<AnnouncementResponseDto> announcements=announcementRepository.findByConstructionCompany(constructionCompany)
-                .stream().map(announcement -> announcementMapper.toEntityMapResponseDto(announcement))
+        log.info("Fetching {} announcement for construction company ID:{}",constructionCompany.getAnnouncement().size(),id);
+        return constructionCompany.getAnnouncement().stream()
+                .map(announcementMapper ::mapToResponse)
                 .collect(Collectors.toList());
-        log.info("Fetching {} announcement for construction company ID:{}",announcements.size(),id);
-        return announcements;
     }
 
     @Override
@@ -92,11 +83,10 @@ public class ConstructionCompanyServiceImpl implements ConstructionCompanyServic
         log.info("Fetching comment for Construction company ID: {} ",id);
         ConstructionCompany constructionCompany=constructionCompanyRepository.findById(id)
                 .orElseThrow(()-> new NotFoundException("Construction company not found"));
-        List<CommentResponseDto> comments=commentRepository.findByConstructionCompany(constructionCompany).stream()
-                .map(comment-> commentMapper.toEntityMapResponseDto(comment))
+        log.info("Fetching {} comments for Construction company ID: {}",constructionCompany.getComment().size(),id);
+        return constructionCompany.getComment().stream()
+                .map(commentMapper :: mapToResponse)
                 .collect(Collectors.toList());
-        log.info("Fetching {} comments for Construction company ID: {}",comments.size(),id);
-        return comments;
 
     }
 

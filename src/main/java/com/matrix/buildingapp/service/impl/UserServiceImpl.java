@@ -8,12 +8,8 @@ import com.matrix.buildingapp.model.dto.UserDto;
 import com.matrix.buildingapp.model.dto.responseDto.AnnouncementResponseDto;
 import com.matrix.buildingapp.model.dto.responseDto.CardResponseDto;
 import com.matrix.buildingapp.model.dto.responseDto.UserResponseDto;
-import com.matrix.buildingapp.model.entity.Announcement;
-import com.matrix.buildingapp.model.entity.Card;
-import com.matrix.buildingapp.model.entity.ResidentialComplex;
 import com.matrix.buildingapp.model.entity.User;
 import com.matrix.buildingapp.repository.AnnouncementRepository;
-import com.matrix.buildingapp.repository.CardRepository;
 import com.matrix.buildingapp.repository.UserRepository;
 import com.matrix.buildingapp.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +30,6 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final AnnouncementRepository announcementRepository;
     private final AnnouncementMapper announcementMapper;
-    private final CardRepository    cardRepository;
     private final CardMapper cardMapper;
     @Override
     public UserResponseDto getById(Long id) {
@@ -52,7 +47,7 @@ public class UserServiceImpl implements UserService {
         user.setUpdatedAt(LocalDateTime.now());
         User ans =userRepository.save(user);
         log.info("User with ID {} updated successfully",id);
-        return userMapper.toResponse(ans);
+        return userMapper.mapToResponse(ans);
     }
 
     @Override
@@ -65,7 +60,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserResponseDto> getAll() {
         log.info("Fetching all users");
-        return userRepository.findAll().stream().map((user)->userMapper.toResponse(user)).collect(Collectors.toList());
+        return userRepository.findAll().stream().map((user)->userMapper.mapToResponse(user)).collect(Collectors.toList());
     }
 
     @Override
@@ -74,18 +69,18 @@ public class UserServiceImpl implements UserService {
         User user=userRepository.findById(id)
                 .orElseThrow(()-> new NotFoundException("User not found"));
         List<AnnouncementResponseDto> announcements=announcementRepository.findByUser(user)
-                .stream().map(announcement -> announcementMapper.toEntityMapResponseDto(announcement))
+                .stream().map(announcement -> announcementMapper.mapToResponse(announcement))
                 .collect(Collectors.toList());
         log.info("Fetching {} announcement for user ID: {} ",announcements.size(),id);
         return announcements;
     }
 
-//    @Override
+    @Override
     public CardResponseDto getCardByUser(Long id) {
         log.info("Fetching card for User ID: {}",id);
         User user=userRepository.findById(id)
                 .orElseThrow(()-> new NotFoundException("User not found"));
-       CardResponseDto cardResponseDto=cardMapper.toResponse(user.getCard());
+       CardResponseDto cardResponseDto=cardMapper.mapToResponse(user.getCard());
        return cardResponseDto;
 
     }

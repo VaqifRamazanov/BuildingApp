@@ -19,15 +19,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class FavoriteServiceImpl implements FavoriteService {
-    private final FavoriteMapper favoriteMapper;
     private final FavoriteRepository favoriteRepository;
     private final AnnouncementRepository announcementRepository;
     private final UserRepository userRepository;
-    private final UserMapper userMapper;
     private final AnnouncementMapper announcementMapper;
 
     @Override
@@ -41,8 +40,8 @@ public class FavoriteServiceImpl implements FavoriteService {
             user.setFavorite(new Favorite());
         }
         Favorite favorite=user.getFavorite();
-        if (favorite.getAnnouncement()==null  || favorite.getAnnouncement().size() == 0 ){
-            favorite.setAnnouncement(new ArrayList<Announcement>());
+        if (favorite.getAnnouncement()==null  || favorite.getAnnouncement().isEmpty()){
+            favorite.setAnnouncement(new ArrayList<>());
         }
         List<Announcement> announcements=favorite.getAnnouncement();
         announcements.add(announcement);
@@ -67,10 +66,12 @@ public class FavoriteServiceImpl implements FavoriteService {
     @Override
     public List<AnnouncementResponseDto> getAll(Long id) {
         User user=userRepository.findById(id).orElseThrow(()-> new NotFoundException("User not found"));
-        if (user.getFavorite()==null || user.getFavorite().getAnnouncement().size()==0){
+        if (user.getFavorite()==null || user.getFavorite().getAnnouncement().isEmpty()){
             throw new NotFoundException("You dont have announcement in favorite");
         }
         Favorite favorite=favoriteRepository.findByUser(user);
-        return announcementMapper.map(favorite.getAnnouncement());
+        return favorite.getAnnouncement().stream()
+                .map(announcementMapper :: mapToResponse)
+                .collect(Collectors.toList());
     }
 }

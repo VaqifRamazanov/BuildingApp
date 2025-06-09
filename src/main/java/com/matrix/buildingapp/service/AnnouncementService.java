@@ -10,7 +10,7 @@ import java.util.List;
 public interface AnnouncementService {
     AnnouncementResponseDto add(AnnouncementRequestDto announcementRequestDto);
     AnnouncementResponseDto getById(Integer id);
-    AnnouncementResponseDto update(AnnouncementRequestDto announcementRequestDto);
+    AnnouncementResponseDto update(Integer id,AnnouncementRequestDto announcementRequestDto);
     void delete(Integer id);
     List<AnnouncementResponseDto> getAll();
 }

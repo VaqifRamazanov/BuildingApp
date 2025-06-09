@@ -56,7 +56,7 @@ public class SecurityConfig {
             "/residentialComplex/**",
             "/announcement/**",
             "/constructionCompany/**",
-            "/card/**"
+
 
     };
     static String[] adminUrls={
@@ -71,7 +71,7 @@ public class SecurityConfig {
             "/controller/user",
             "/user/{id}/announcement",
             "/favorite/**",
-
+            "/card/**"
 
     };
     static String[] anyAuthUrls={

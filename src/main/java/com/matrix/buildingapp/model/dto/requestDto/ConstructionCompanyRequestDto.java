@@ -4,7 +4,6 @@ import lombok.Data;
 
 @Data
 public class ConstructionCompanyRequestDto {
-    private Integer id;
     private String name;
     private String information;
     private String city;

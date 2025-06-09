@@ -15,9 +15,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.awt.event.WindowFocusListener;
 import java.time.LocalDateTime;
-import java.util.HashSet;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +37,7 @@ public class CardServiceImpl implements CardService {
             throw new AlreadyExistException("This card already been used");
         }
 
-        Card card = cardMapper.toEntity(requestDto);
+        Card card = cardMapper.mapToEntity(requestDto);
         card.setCreatedAt(LocalDateTime.now());
 
         // *** KEY CHANGE: Manage the relationship correctly ***
@@ -50,7 +48,7 @@ public class CardServiceImpl implements CardService {
         cardRepository.save(card);
 
 
-        CardResponseDto cardResponseDto = cardMapper.toResponse(card);
+        CardResponseDto cardResponseDto = cardMapper.mapToResponse(card);
         log.info("Adding of card is finished for Bank Account: {}", requestDto.getBankAccount());
         return cardResponseDto;
     }
@@ -65,7 +63,7 @@ public class CardServiceImpl implements CardService {
         });
 
         log.info("getCartById.success for Cart ID: {}", id);
-        return cardMapper.toResponse(cart);
+        return cardMapper.mapToResponse(cart);
     }
 
     @Override

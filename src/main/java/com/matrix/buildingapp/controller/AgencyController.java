@@ -5,12 +5,12 @@ import com.matrix.buildingapp.model.dto.responseDto.AgencyResponseDto;
 import com.matrix.buildingapp.model.dto.responseDto.AnnouncementResponseDto;
 import com.matrix.buildingapp.service.AgencyService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 
 @RestController
 @RequiredArgsConstructor
@@ -19,22 +19,24 @@ public class AgencyController {
     private final AgencyService agencyService;
 
     @PostMapping("/add")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<AgencyResponseDto>  add(@RequestBody AgencyRequestDto agencyRequestDto) {
 
-        return ResponseEntity.ok(agencyService.add(agencyRequestDto));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(agencyService.add(agencyRequestDto));
     }
 
     @GetMapping("/get/{id}")
     public ResponseEntity<AgencyResponseDto> getById(@PathVariable Integer id) {
 
-        return ResponseEntity.ok(agencyService.getById(id));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(agencyService.getById(id));
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<AgencyResponseDto> update(@RequestBody AgencyRequestDto agencyRequestDto) {
+    @PutMapping("/update/{id}")
+    public ResponseEntity<AgencyResponseDto> update(@PathVariable Integer id,@RequestBody AgencyRequestDto agencyRequestDto) {
 
-        return ResponseEntity.ok(agencyService.update(agencyRequestDto));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(agencyService.update(id,agencyRequestDto));
     }
 
     @DeleteMapping("/delete/{id}")
@@ -47,12 +49,14 @@ public class AgencyController {
     @GetMapping("/agencies")
     public ResponseEntity <List<AgencyResponseDto>> getAll() {
 
-        return  ResponseEntity.ok(agencyService.getAll());
+        return  ResponseEntity.status(HttpStatus.OK)
+                .body(agencyService.getAll());
     }
 
     @GetMapping("/{id}/announcements")
     public ResponseEntity<List<AnnouncementResponseDto>> getAnnouncementByAgency(@PathVariable Integer id){
-        return ResponseEntity.ok(agencyService.getAnnouncementByAgency(id));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(agencyService.getAnnouncementByAgency(id));
     }
 
 }

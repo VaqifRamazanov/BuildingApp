@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 
 @Data
 public class AgencyRequestDto {
-
-    private Integer id ;
     private String name;
     private String information;
     private String city;

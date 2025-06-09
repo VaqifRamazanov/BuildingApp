@@ -1,5 +1,7 @@
 package com.matrix.buildingapp.model.dto.requestDto;
 
+import com.matrix.buildingapp.enums.AnnouncementForm;
+import com.matrix.buildingapp.enums.AnnouncementType;
 import com.matrix.buildingapp.model.entity.Agency;
 import com.matrix.buildingapp.model.entity.ConstructionCompany;
 import com.matrix.buildingapp.model.entity.ResidentialComplex;
@@ -9,10 +11,9 @@ import java.time.LocalDateTime;
 import java.util.Date;
 @Data
 public class AnnouncementRequestDto {
-    private Integer id ;
     private String area;
-    private String announcementType;
-    private String announcementForm;
+    private AnnouncementType announcementType;
+    private AnnouncementForm announcementForm;
     private Long price;
     private String information;
     private Integer roomNumber;
@@ -25,7 +26,6 @@ public class AnnouncementRequestDto {
     private String street;
     private String homeNumber;
     private String constructionDate;
-    private LocalDateTime additionDate;
     private Integer constructionCompanyID;
     private Integer agencyID;
     private Integer residentialComplexId;

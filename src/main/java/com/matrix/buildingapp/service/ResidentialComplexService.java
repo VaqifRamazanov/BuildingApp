@@ -11,7 +11,7 @@ import java.util.List;
 public interface ResidentialComplexService {
     ResidentialComplexResponseDto add(ResidentialComplexRequestDto residentialComplexRequestDto);
     ResidentialComplexResponseDto findById(Integer id);
-    ResidentialComplexResponseDto update(ResidentialComplexRequestDto residentialComplexRequestDto);
+    ResidentialComplexResponseDto update(Integer id,ResidentialComplexRequestDto residentialComplexRequestDto);
     void delete(Integer id);
     List<ResidentialComplexResponseDto> findAll();
     List<AnnouncementResponseDto> getAnnouncementByResidentialComplex(Integer id);

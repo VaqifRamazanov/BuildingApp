@@ -16,17 +16,18 @@ public class CommentController {
     private final CommentService commentService;
 
     @PostMapping("/add")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<CommentResponseDto> add(@RequestBody CommentRequestDto commentRequestDto){
-        return ResponseEntity.ok(commentService.add(commentRequestDto));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(commentService.add(commentRequestDto));
     }
     @GetMapping({"/get/{id}"})
     public ResponseEntity<CommentResponseDto> getById(@PathVariable Integer id){
-        return ResponseEntity.ok(commentService.getById(id));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(commentService.getById(id));
     }
-    @PutMapping("/update")
-    public ResponseEntity<CommentResponseDto> update(@RequestBody CommentRequestDto commentRequestDto){
-        return ResponseEntity.ok(commentService.update(commentRequestDto));
+    @PutMapping("/update/{id}")
+    public ResponseEntity<CommentResponseDto> update(@PathVariable Integer id,CommentRequestDto commentRequestDto){
+        return ResponseEntity.ok(commentService.update(id,commentRequestDto));
 
     }
     @DeleteMapping("/delete/{id}")

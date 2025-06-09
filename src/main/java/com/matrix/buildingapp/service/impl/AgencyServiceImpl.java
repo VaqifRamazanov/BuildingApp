@@ -1,6 +1,7 @@
 package com.matrix.buildingapp.service.impl;
 
 
+import com.matrix.buildingapp.exception.NotFoundException;
 import com.matrix.buildingapp.mapper.AgencyMapper;
 import com.matrix.buildingapp.mapper.AnnouncementMapper;
 import com.matrix.buildingapp.model.dto.requestDto.AgencyRequestDto;
@@ -8,10 +9,8 @@ import com.matrix.buildingapp.model.dto.responseDto.AgencyResponseDto;
 import com.matrix.buildingapp.model.dto.responseDto.AnnouncementResponseDto;
 import com.matrix.buildingapp.model.entity.Agency;
 import com.matrix.buildingapp.repository.AgencyRepository;
-import com.matrix.buildingapp.repository.AnnouncementRepository;
 import com.matrix.buildingapp.service.AgencyService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,29 +21,28 @@ import java.util.stream.Collectors;
 public class AgencyServiceImpl implements AgencyService {
     private final AgencyRepository agencyRepository;
     private final AgencyMapper agencyMapper;
-    private final AnnouncementRepository announcementRepository;
     private final AnnouncementMapper announcementMapper;
     @Override
     public AgencyResponseDto add(AgencyRequestDto agencyRequestDto) {
-            Agency agency=agencyMapper.toRequestDtoMapEntity(agencyRequestDto);
+            Agency agency=agencyMapper.mapToEntity(agencyRequestDto);
             agencyRepository.save(agency);
-            AgencyResponseDto agencyResponseDto=agencyMapper.toEntityMapResponseDto(agency);
-            return agencyResponseDto;
+             return agencyMapper.mapToResponse(agency);
     }
 
     @Override
     public AgencyResponseDto getById(Integer id) {
-        Agency agency= agencyRepository.findById(id).orElseThrow(NullPointerException::new);
-        AgencyResponseDto agencyResponseDto =agencyMapper.toEntityMapResponseDto(agency);
-        return agencyResponseDto;
+        Agency agency= agencyRepository.findById(id).orElseThrow(()-> new NotFoundException("agency not found"));
+        return agencyMapper.mapToResponse(agency);
+
     }
 
     @Override
-    public AgencyResponseDto update(AgencyRequestDto agencyRequestDto) {
-        Agency agency= agencyMapper.toRequestDtoMapEntity(agencyRequestDto);
-        agencyRepository.save(agency);
-        AgencyResponseDto agencyResponseDto =agencyMapper.toEntityMapResponseDto(agency);
-        return agencyResponseDto;
+    public AgencyResponseDto update(Integer id  ,AgencyRequestDto agencyRequestDto) {
+        Agency agency=agencyRepository.findById(id).orElseThrow(()-> new NotFoundException("agency not found"));
+        Agency agency1= agencyMapper.map(agencyRequestDto,agency);
+        agencyRepository.save(agency1);
+        return agencyMapper.mapToResponse(agency1);
+
     }
 
     @Override
@@ -57,18 +55,17 @@ public class AgencyServiceImpl implements AgencyService {
     public List<AgencyResponseDto> getAll() {
 
         List<Agency> agencies= agencyRepository.findAll();
-        List<AgencyResponseDto> agencyResponseDto =agencyMapper.map(agencies);
-        return agencyResponseDto;
+        return agencies.stream()
+                .map(agencyMapper :: mapToResponse)
+                .collect(Collectors.toList());
     }
 
     @Override
     public List<AnnouncementResponseDto> getAnnouncementByAgency(Integer id){
-    Agency agency=agencyRepository.getById(id);
-    List<AnnouncementResponseDto> announcementResponseDto
-            =announcementRepository.findByAgency(agency).stream()
-            .map(announcement -> announcementMapper.toEntityMapResponseDto(announcement))
-            .collect(Collectors.toList());
-    return announcementResponseDto;
+    Agency agency=agencyRepository.findById(id).orElseThrow(()-> new NotFoundException("agency not found"));
+        return agency.getAnnouncement().stream()
+                .map(announcementMapper ::mapToResponse)
+                .collect(Collectors.toList());
 
     }
 }

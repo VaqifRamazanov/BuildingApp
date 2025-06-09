@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 public class ResidentialComplexRequestDto {
-    private Integer id ;
     private String name;
     private String city;
     private String region;

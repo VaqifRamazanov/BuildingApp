@@ -1,5 +1,7 @@
 package com.matrix.buildingapp.model.entity;
 
+import com.matrix.buildingapp.enums.AnnouncementForm;
+import com.matrix.buildingapp.enums.AnnouncementType;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -14,8 +16,10 @@ public class Announcement {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id ;
     private String area;
-    private String announcementType;
-    private String announcementForm;
+    @Enumerated(EnumType.STRING)
+    private AnnouncementType announcementType;
+    @Enumerated(EnumType.STRING)
+    private AnnouncementForm announcementForm;
     private Long price;
     private String information;
     private Integer roomNumber;
@@ -29,9 +33,8 @@ public class Announcement {
     private String homeNumber;
     private String constructionDate;
     private LocalDateTime additionDate;
-
     @ManyToOne
-    @JoinColumn(name = "residential_comlex_id")
+    @JoinColumn(name = "residential_complex_id")
     private ResidentialComplex residentialComplex;
 
     @ManyToOne

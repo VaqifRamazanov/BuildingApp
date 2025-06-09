@@ -6,7 +6,6 @@ import com.matrix.buildingapp.model.dto.responseDto.CommentResponseDto;
 import com.matrix.buildingapp.model.dto.responseDto.ConstructionCompanyResponseDto;
 import com.matrix.buildingapp.service.ConstructionCompanyService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,20 +19,22 @@ public class ConstructionCompanyController {
     private final ConstructionCompanyService constructionCompanyService;
 
     @PostMapping("/add")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ConstructionCompanyResponseDto> add(@RequestBody ConstructionCompanyRequestDto constructionCompanyRequestDto) {
-        return ResponseEntity.ok(constructionCompanyService.add(constructionCompanyRequestDto));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(constructionCompanyService.add(constructionCompanyRequestDto));
     }
 
     @GetMapping({"/get/{id}"})
     public ResponseEntity<ConstructionCompanyResponseDto> getById(@PathVariable Integer id) {
 
-        return ResponseEntity.ok(constructionCompanyService.findById(id));
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(constructionCompanyService.findById(id));
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<ConstructionCompanyResponseDto> update(@RequestBody ConstructionCompanyRequestDto constructionCompanyRequestDto) {
-        return ResponseEntity.ok(constructionCompanyService.update(constructionCompanyRequestDto));
+    @PutMapping("/update/{id}")
+    public ResponseEntity<ConstructionCompanyResponseDto> update(@PathVariable Integer id,@RequestBody ConstructionCompanyRequestDto constructionCompanyRequestDto) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(constructionCompanyService.update(id, constructionCompanyRequestDto));
     }
 
     @DeleteMapping({"/{id}"})

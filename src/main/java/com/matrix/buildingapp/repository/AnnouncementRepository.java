@@ -1,8 +1,4 @@
 package com.matrix.buildingapp.repository;
-
-
-
-
 import com.matrix.buildingapp.model.entity.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 

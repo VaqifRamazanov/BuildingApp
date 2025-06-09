@@ -17,12 +17,14 @@ public class CardController {
 
     @PostMapping("/add/{id}")
     public ResponseEntity<CardResponseDto> add(@PathVariable Long id, @RequestBody @Valid CardRequestDto requestDto) {
-        return new ResponseEntity<>(cardService.add(id,requestDto), HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(cardService.add(id,requestDto));
     }
 
     @GetMapping("/getById/{id}")
     public ResponseEntity<CardResponseDto> getById(@PathVariable Long id) {
-        return new ResponseEntity<>(cardService.getById(id), HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(cardService.getById(id));
     }
 
     @DeleteMapping("/delete/{id}")

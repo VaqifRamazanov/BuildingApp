@@ -12,7 +12,7 @@ import java.util.List;
 public interface AgencyService {
     AgencyResponseDto add(AgencyRequestDto agencyRequestDto);
     AgencyResponseDto getById(Integer id);
-    AgencyResponseDto update(AgencyRequestDto agencyRequestDto);
+    AgencyResponseDto update(Integer id,AgencyRequestDto agencyRequestDto);
     void delete(Integer id);
     List<AgencyResponseDto> getAll();
      List<AnnouncementResponseDto> getAnnouncementByAgency(Integer id);
